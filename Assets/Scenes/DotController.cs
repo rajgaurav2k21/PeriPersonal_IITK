@@ -33,13 +33,22 @@ public class DotController : MonoBehaviour
         while (currentIndex < allDots.Count)
         {
             // Activate the current dot
-            allDots[currentIndex].SetActive(true);
+            GameObject currentDot = allDots[currentIndex];
+            currentDot.SetActive(true);
 
-            // Wait for the specified interval
-            yield return new WaitForSeconds(interval);
+            // Wait until the dot is deactivated or the interval elapses
+            float elapsedTime = 0f;
+            while (elapsedTime < interval && currentDot.activeSelf)
+            {
+                elapsedTime += Time.deltaTime;
+                yield return null;
+            }
 
-            // Move to the next dot
-            currentIndex++;
+            // Move to the next dot if the current one is deactivated
+            if (!currentDot.activeSelf)
+            {
+                currentIndex++;
+            }
         }
     }
 }
